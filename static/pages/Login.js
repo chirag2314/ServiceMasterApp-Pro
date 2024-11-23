@@ -2,45 +2,54 @@ import router from "../utils/router.js";
 
 const Login = {
   template: `
-    <div>
-    <h1>Login</h1>
-    <form method="post">
-    <input v-model="usertype" type="radio" id="customer" name="usertype" value="Customer" required>
-    <label for="customer">Customer</label>
-    <input v-model="usertype" type="radio" id="professional" name="usertype" value="Professional" required>
-    <label for="professional">Professional</label>
-    <br>
-    <label for="username" class="form-label">Username
-    <input v-model="username" type="text" name="username" id="username" class="form-control" required>
-    </label>
-    <br>
-    <label for="password" class="form-label">Password
-    <input v-model="password" type="password" name="password" id="password" class="form-control" required>
-    </label>
-    <input type="submit" value="Login" class="btn btn-success" @click="submit1">
-    </form>
-    </div> 
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="row justify-content-center">
+          <div class="col-lg-4">
+            <div style="margin-top: 140px">
+              <h3 class="text-center">Login</h3>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" v-model="email" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" v-model="password" class="form-control" />
+              </div>
+              <div class="form-group mt-3">
+                <button class="btn btn-dark" @click="submitinfo">
+                  LOGIN
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   `,
   data() {
     return {
-        usertype: "",
-        username: "",
+        email: "",
         password: "",
     };
   },
   methods: {
-    async submit1() {
-        const url = window.location.origin
+    async submitinfo() {
+        const url = window.location.origin;
         const res = await fetch(url+'/login', {
             method : 'POST',
+            mode: "no-cors",
             headers : {
                 "Content-Type" : 'application/json'
             },
-            body : JSON.stringify({utype: this.usertype, username: this.username, password: this.password}),
+            body : JSON.stringify({ email: this.email, passwordhash: this.password}),
 
         });
         if(res.ok){
             console.log('allok')
+        }
+        else{
+          console.error("Login Failed")
         }
     },
   },
