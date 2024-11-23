@@ -1,8 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from app import app
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_security import  Security, UserMixin, RoleMixin, SQLAlchemyUserDatastore
 from flask_security.models import fsqla_v3 as fsq
+from flask_security.utils import hash_password
 
 db = SQLAlchemy(app)
 security=Security(app)
@@ -18,7 +18,6 @@ class User(db.Model, UserMixin):
     passwordhash=db.Column(db.String(512), nullable=False)
     name=db.Column(db.String(64), nullable=False)
     pincode=db.Column(db.String(8))
-    role=db.Column(db.String(16), nullable=False)
     contact=db.Column(db.Integer)
     service_id=db.Column(db.Integer, db.ForeignKey('service.id'))
     experience=db.Column(db.Integer)
@@ -26,17 +25,6 @@ class User(db.Model, UserMixin):
     profile=db.Column(db.String(512))
     fs_uniquifier=db.Column(db.String,nullable=False)
     roles=db.relationship('Role', secondary='userroles')
-
-    @property
-    def password(self):
-        raise AttributeError('password is not a readable attribute')
-    
-    @password.setter
-    def password(self, password):
-        self.passwordhash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.passwordhash, password)
     
 class Role(db.Model, RoleMixin):
     __tablename__='role'
@@ -82,3 +70,11 @@ with app.app_context():
     user_datastore.find_or_create_role(name='admin', description='Administrator')
     user_datastore.find_or_create_role(name='customer', description='Customer')
     user_datastore.find_or_create_role(name='professional', description='Professional')
+
+    if not user_datastore.find_user(email = "admin@servicemaster.com"):
+        user_datastore.create_user(email = "admin@servicemaster.com", passwordhash=hash_password('admin'), roles=['admin'], name='Admin')
+    if not user_datastore.find_user(email = "firstuser@servicemaster.com"):
+        user_datastore.create_user(email = "firstuser@servicemaster.com", passwordhash=hash_password('firstuser'), roles=['customer'], name='First Cust')
+    if not user_datastore.find_user(email = "firstprof@servicemaster.com"):
+        user_datastore.create_user(email = "firstprof@servicemaster.com", passwordhash=hash_password('firstprof'), roles=['professional'], name='First Prof')
+    db.session.commit()
