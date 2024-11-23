@@ -1,23 +1,31 @@
 from flask_sqlalchemy import SQLAlchemy
 from app import app
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_security import  Security, UserMixin, RoleMixin, SQLAlchemyUserDatastore
+from flask_security.models import fsqla_v3 as fsq
+
 db = SQLAlchemy(app)
+security=Security(app)
+
+fsq.FsModels.set_db_info(db)
 
 #Database Modelling
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__='user'
     id=db.Column(db.Integer, primary_key=True)
-    username=db.Column(db.String(32), nullable=False, unique=True)
+    email=db.Column(db.String(32), nullable=False, unique=True)
     passwordhash=db.Column(db.String(512), nullable=False)
     name=db.Column(db.String(64), nullable=False)
-    pincode=db.Column(db.String(8), nullable=False)
+    pincode=db.Column(db.String(8))
     role=db.Column(db.String(16), nullable=False)
-    contact=db.Column(db.Integer, nullable=True)
-    service_id=db.Column(db.Integer, db.ForeignKey('service.id'), nullable=True)
-    experience=db.Column(db.Integer, nullable=True)
-    status=db.Column(db.String(16), nullable=True)
-    profile=db.Column(db.String(512), nullable=True)
+    contact=db.Column(db.Integer)
+    service_id=db.Column(db.Integer, db.ForeignKey('service.id'))
+    experience=db.Column(db.Integer)
+    active=db.Column(db.String(16))
+    profile=db.Column(db.String(512))
+    fs_uniquifier=db.Column(db.String,nullable=False)
+    roles=db.relationship('Role', secondary='userroles')
 
     @property
     def password(self):
@@ -29,6 +37,18 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.passwordhash, password)
+    
+class Role(db.Model, RoleMixin):
+    __tablename__='role'
+    id=db.Column(db.Integer, primary_key=True)
+    name=db.Column(db.String(64), nullable=False)
+    description=db.Column(db.String(512), nullable=False)
+
+class UserRoles(db.Model):
+    __tablename__='userroles'
+    id=db.Column(db.Integer, primary_key=True)
+    userid=db.Column(db.Integer, db.ForeignKey('user.id'))
+    roleid=db.Column(db.Integer, db.ForeignKey('role.id'))
 
 class Service(db.Model):
     __tablename__='service'
@@ -39,9 +59,6 @@ class Service(db.Model):
     time=db.Column(db.Integer,nullable=False)
 
     professionals=db.relationship('User', backref='service', lazy=True)
-
-    def get_service_id(self, service):
-        return id
 
 class ServiceRequest(db.Model):
     __tablename__='servicerequests'
@@ -55,13 +72,13 @@ class ServiceRequest(db.Model):
     rating=db.Column(db.String(32), nullable=True)
     review=db.Column(db.String(512), nullable=True)
 
-    customers=db.relationship('User', backref='servicerequests', lazy=True)
+    users=db.relationship('User', backref='servicerequests', lazy=True)
     services=db.relationship('Service', backref='servicerequests', lazy=True)\
 
 with app.app_context():
+    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+    security.init_app(app, user_datastore)
     db.create_all()
-    cadmin = User.query.filter_by(username='admin').first()
-    if not cadmin:
-        admin=User(username='admin', password='admin', name='admin', pincode='000000', is_admin=True)
-        db.session.add(admin)
-        db.session.commit()
+    user_datastore.find_or_create_role(name='admin', description='Administrator')
+    user_datastore.find_or_create_role(name='customer', description='Customer')
+    user_datastore.find_or_create_role(name='professional', description='Professional')
