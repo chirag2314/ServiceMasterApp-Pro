@@ -51,8 +51,8 @@ class Service(db.Model):
 class ServiceRequest(db.Model):
     __tablename__='servicerequests'
     servicereqid=db.Column(db.Integer,primary_key=True)
-    cuser=db.Column(db.String(32),db.ForeignKey('user.username'),nullable=False)
-    puser=db.Column(db.String(32),db.ForeignKey('user.username'),nullable=False)
+    cuser=db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
+    puser=db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
     service_id=db.Column(db.Integer, db.ForeignKey('service.id'), nullable=False)
     requestdate=db.Column(db.DateTime, nullable=False)
     completedate=db.Column(db.DateTime, nullable=True)
@@ -60,14 +60,14 @@ class ServiceRequest(db.Model):
     rating=db.Column(db.String(32), nullable=True)
     review=db.Column(db.String(512), nullable=True)
 
-    users=db.relationship('User', backref='servicerequests', lazy=True)
-    services=db.relationship('Service', backref='servicerequests', lazy=True)\
-
+    services=db.relationship('Service', backref='servicerequests', lazy=True)
+    professional = db.relationship('User', foreign_keys = [puser])
+    customer = db.relationship('User', foreign_keys= [cuser])
+ 
 with app.app_context():
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security.init_app(app, user_datastore)
-    db.create_all()
-    user_datastore.find_or_create_role(name='admin', description='Administrator')
+    user_datastore.find_or_create_role(name='admin', description="Administrator")
     user_datastore.find_or_create_role(name='customer', description='Customer')
     user_datastore.find_or_create_role(name='professional', description='Professional')
 
@@ -77,4 +77,5 @@ with app.app_context():
         user_datastore.create_user(email = "firstuser@servicemaster.com", passwordhash=hash_password('firstuser'), roles=['customer'], name='First Cust')
     if not user_datastore.find_user(email = "firstprof@servicemaster.com"):
         user_datastore.create_user(email = "firstprof@servicemaster.com", passwordhash=hash_password('firstprof'), roles=['professional'], name='First Prof')
+    db.create_all()
     db.session.commit()
