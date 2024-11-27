@@ -9,10 +9,10 @@ const routes = [
     {path : "/register", component : Register},
     {path : "/login", component : Login},
     {path : "/logout", component : Logout},
-]
+];
 
 const router = new VueRouter({
     routes,
-})
+});
 
 export default router;

@@ -46,7 +46,7 @@ const Login = {
 
         });
         if(res.ok){
-            console.log('allok')
+            router.push("/profile")
         }
         else{
           console.error("Login Failed")
