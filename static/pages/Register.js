@@ -1,3 +1,5 @@
+import router from "../utils/router.js";
+
 const Register = {
   template : `<div> 
     <h1>Register</h1>
