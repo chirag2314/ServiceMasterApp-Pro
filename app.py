@@ -4,6 +4,7 @@ import routes
 import createinitialdata
 from dotenv import load_dotenv
 import os
+import resources
 load_dotenv()
 
 
@@ -29,7 +30,13 @@ def create_app():
         db.create_all()
         createinitialdata.create_data(user_datastore)
 
+
+    app.config['WTF_CSRF_CHECK_DEFAULT'] = False
+    app.config['SECURITY_CSRF_PROTECT_MECHANISHMS'] = []
+    app.config['SECURITY_CSRF_IGNORE_UNAUTH_ENDPOINTS'] = True
+
     routes.create_views(app,user_datastore, db)
+    resources.api.init_app(app)
 
     return app
 

@@ -30,7 +30,7 @@ def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, d
         elif role == 'customer':
             active = 'Approved'
         try:    
-            user_datastore.create_user(email=email, passwordhash=hash_password(password), roles=[role], name=name, active=active, contact=contact, pincode=pincode, experience=experience, service_id=service)
+            user_datastore.create_user(email=email, password=hash_password(password), roles=[role], name=name, active=active, contact=contact, pincode=pincode, experience=experience, service_id=service)
             db.session.commit()
         except:
             print('error while creating')

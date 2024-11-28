@@ -42,11 +42,11 @@ const Login = {
             headers : {
                 "Content-Type" : 'application/json'
             },
-            body : JSON.stringify({ email: this.email, passwordhash: this.password}),
+            body : JSON.stringify({ email: this.email, password: this.password}),
 
         });
         if(res.ok){
-            router.push("/profile")
+            router.push("/cdashboard")
         }
         else{
           console.error("Login Failed")

@@ -11,14 +11,13 @@ class User(db.Model, UserMixin):
     __tablename__='user'
     id=db.Column(db.Integer, primary_key=True)
     email=db.Column(db.String(32), nullable=False, unique=True)
-    passwordhash=db.Column(db.String(512), nullable=False)
+    password=db.Column(db.String(512), nullable=False)
     name=db.Column(db.String(64), nullable=False)
     pincode=db.Column(db.String(8))
     contact=db.Column(db.Integer)
     service_id=db.Column(db.Integer, db.ForeignKey('service.id'))
     experience=db.Column(db.Integer)
     active=db.Column(db.String(16))
-    profile=db.Column(db.String(512))
     fs_uniquifier=db.Column(db.String,nullable=False)
     roles=db.relationship('Role', secondary='userroles')
     
