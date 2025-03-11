@@ -15,9 +15,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_TRACK']=os.getenv('SQLALCHEMY_DATABASE_TRACK')
     app.config['SECRET_KEY']=os.getenv('SECRET_KEY')
     app.config['SECURITY_PASSWORD_SALT']=os.getenv('SECURITY_PASSWORD_SALT')
-    app.config['WTF_CSRF_CHECK_DEFAULT'] = False
-    app.config['SECURITY_CSRF_PROTECT_MECHANISHMS'] = []
-    app.config['SECURITY_CSRF_IGNORE_UNAUTH_ENDPOINTS'] = True
+    
     db.init_app(app)
 
     with app.app_context():

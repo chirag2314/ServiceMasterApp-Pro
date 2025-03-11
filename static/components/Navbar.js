@@ -10,7 +10,7 @@ const Navbar = {
     data(){
         return{
         url : window.location.origin + "/logout",
-        }
+        };
     },
 };
 

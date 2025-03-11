@@ -27,6 +27,7 @@ class ServiceResources(Resource):
         return all_resources
     
     @auth_required()
+    @marshal_with(services_fields)
     def post(self):
         args=parser.parse_args()
         services=Service(name=args.name, description=args.description, price=args.price, time=args.time)

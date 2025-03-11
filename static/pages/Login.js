@@ -36,11 +36,10 @@ const Login = {
   methods: {
     async submitinfo() {
         const url = window.location.origin;
-        const res = await fetch(url+'/login', {
+        const res = await fetch(url+"/login", {
             method : 'POST',
-            mode: "no-cors",
             headers : {
-                "Content-Type" : 'application/json'
+                "Content-Type" : "application/json",
             },
             body : JSON.stringify({ email: this.email, password: this.password}),
 

@@ -31,11 +31,26 @@ const AAddService = {
       <br>
 
       <!-- Submit Button -->
-      <input type="submit" value="Add Service" class="btn btn-success">
+      <button class="btn btn-success" @click="submitinfo">
+        Add Service
+      </button>
     </div>
     </div>
     </div>
-    `
+    `,
+    data(){
+      return {
+        servicename: "",
+        serviceprice: "",
+        servicedescription: "",
+        servicetime: "",
+      };
+    },
+    methods: {
+      async submitinfo(){
+        
+      }
+    }
 }
 
 export default AAddService

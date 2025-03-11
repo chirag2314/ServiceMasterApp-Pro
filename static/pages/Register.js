@@ -61,9 +61,8 @@ const Register = {
     },
   methods: {
     async submitInfo() {
-      const origin = window.location.origin;
-      const url = `${origin}/register`;
-      const res = await fetch(url, {
+      const url = window.location.origin;
+      const res = await fetch(url + "/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
