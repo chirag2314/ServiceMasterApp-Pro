@@ -3,10 +3,11 @@ import router from "../utils/router.js";
 const Login = {
   template: `
     <div class="row">
+      <div class="col-lg-6"></div>
       <div class="col-lg-6">
         <div class="row justify-content-center">
           <div class="col-lg-4">
-            <div style="margin-top: 140px">
+            <div style="margin-top: 300px">
               <h3 class="text-center">Login</h3>
               <div class="form-group">
                 <label>Email</label>

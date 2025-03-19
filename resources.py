@@ -33,6 +33,6 @@ class ServiceResources(Resource):
         services=Service(name=args.name, description=args.description, price=args.price, time=args.time)
         db.session.add(services)
         db.session.commit()
-        return {'message' : 'resource created'}, 200
+        return {'message' : 'service created'}, 200
     
 api.add_resource(ServiceResources, '/services')

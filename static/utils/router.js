@@ -8,6 +8,13 @@ import ADashboard from "../pages/ADashboard.js";
 import AEditService from "../pages/AEditService.js";
 import ADeleteService from "../pages/ADeleteService.js";
 import AUpdateProfessional from "../pages/AUpdateProfessional.js";
+import CProfile from "../pages/CProfile.js";
+import CBookAService from "../pages/CBookAService.js";
+import CCloseService from "../pages/CCloseService.js";
+import CService from "../pages/CService.js";
+import PDashboard from "../pages/PDashboard.js";
+import PEditServiceRequest from "../pages/PEditServiceRequest.js";
+import PProfile from "../pages/PProfile.js";
 
 const routes = [
     {path : "/", component : Home },
@@ -20,6 +27,13 @@ const routes = [
     {path : "/aeditservice", component : AEditService},
     {path : "/adeleteservice", component : ADeleteService},
     {path : "/aupdateprofessional", component : AUpdateProfessional},
+    {path : "/cbookaservice", component : CBookAService},
+    {path : "/ccloseservice", component : CCloseService},
+    {path : "/cprofile", component : CProfile},
+    {path : "/cservice", component : CService},
+    {path : "/pdashboard", component : PDashboard},
+    {path : "/peditservicerequest", component : PEditServiceRequest},
+    {path : "/pprofile", component : PProfile},
 ];
 
 const router = new VueRouter({

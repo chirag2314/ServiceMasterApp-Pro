@@ -83,7 +83,7 @@ const ADashboard = {
 
         <div>
             <div class="heading">
-            <   h2 class="text-muted">Service Requests</h2>
+            <h2 class="text-muted">Service Requests</h2>
             </div>
             
             <table class="table">
