@@ -37,7 +37,7 @@ const Login = {
   methods: {
     async submitinfo() {
         const url = window.location.origin;
-        const res = await fetch(url+"/login", {
+        const res = await fetch(url+"/mylogin", {
             method : 'POST',
             headers : {
                 "Content-Type" : "application/json",
@@ -46,7 +46,18 @@ const Login = {
 
         });
         if(res.ok){
-            router.push("/cdashboard")
+          const data = await res.json()
+          switch (data.role){
+            case "admin":
+              router.push("/adashboard");
+              break;
+            case "professional":
+              router.push("/pdashboard");
+              break;
+            case "customer":
+              router.push("/cdashboard");
+              break;
+          }
         }
         else{
           console.error("Login Failed")

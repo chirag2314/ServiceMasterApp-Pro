@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from extensions import db, security
 import routes
 import createinitialdata
@@ -11,6 +12,7 @@ load_dotenv()
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
     app.config['SQLALCHEMY_DATABASE_URI']=os.getenv('SQLALCHEMY_DATABASE_URI')
     app.config['SQLALCHEMY_DATABASE_TRACK']=os.getenv('SQLALCHEMY_DATABASE_TRACK')
     app.config['SECRET_KEY']=os.getenv('SECRET_KEY')

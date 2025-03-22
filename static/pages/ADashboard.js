@@ -58,17 +58,17 @@ const ADashboard = {
                     <th>Name</th>
                     <th>Contact</th>
                     <th>Service</th>
-                    <th>Status</th>
+                    <th>Active</th>
                     <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="professional in professionals" :key="professional.id">
-                    <td>{{ professional.username }}</td>
+                    <td>{{ professional.email }}</td>
                     <td>{{ professional.name }}</td>
                     <td>{{ professional.contact }}</td>
                     <td>{{ professional.service_id }}</td>
-                    <td>{{ professional.status }}</td>
+                    <td>{{ professional.active }}</td>
                     <td>
                         <button class="btn btn-primary" @click="updateProfessional(professional.id)">
                         <i class="fas fa-edit fa-xs"></i> Edit
@@ -117,6 +117,18 @@ const ADashboard = {
       professionals: [],
       serviceRequests: []
     };
+  },
+  async mounted(){
+    const resProfessionals = await fetch(window.location.origin + "/api/professionals")
+    if (resProfessionals.ok) {
+        const data = await resProfessionals.json();
+        this.professionals = data;
+    }
+    const resServices = await fetch(window.location.origin + "/api/services")
+    if (resServices.ok) {
+        const data = await resServices.json();
+        this.services = data;
+    }
   },
   methods: {
     // Navigate to Add Service page

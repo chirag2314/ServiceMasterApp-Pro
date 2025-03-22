@@ -48,7 +48,20 @@ const AAddService = {
     },
     methods: {
       async submitinfo(){
-        
+        const url = window.location.origin;
+        const res = await fetch(url+"/api/services", {
+            method : 'POST',
+            headers : {
+                "Content-Type" : "application/json",
+            },
+            body : JSON.stringify({ name: this.servicename, description: this.servicedescription, price: this.serviceprice, time: this.servicetime}),
+        });
+        if(res.ok){
+          router.push("/adashboard")
+        }
+        else{
+          console.log("someerror")
+        }
       }
     }
 }

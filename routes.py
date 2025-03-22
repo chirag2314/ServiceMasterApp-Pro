@@ -1,7 +1,7 @@
 from flask import render_template_string, render_template, Flask, request, jsonify
 from flask_security import auth_required, current_user, roles_required
 from flask_security import SQLAlchemySessionUserDatastore
-from flask_security.utils import hash_password
+from flask_security.utils import hash_password, verify_password
 
 def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, db ):
 
@@ -37,3 +37,20 @@ def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, d
             db.session.rollback()
             return jsonify({'message' : 'error while creating user'}), 408
         return jsonify({'message' : 'user created'}), 200
+    
+    @app.route('/mylogin', methods=['POST'])
+    def login():
+        data=request.get_json()
+        email=data.get('email')
+        password=data.get('password')
+
+        if not email or not password:
+            return jsonify({'message' : 'invalid email or password'}), 404
+        user=user_datastore.find_user(email = email)
+        if not user:
+            return jsonify({'message' : 'invalid user'}), 404
+        
+        if verify_password(password, user.password):
+                return jsonify({'id': user.id, 'email': user.email, 'role': user.roles[0].name}), 200
+        else:
+            return jsonify({'message' : 'wrong password'})
