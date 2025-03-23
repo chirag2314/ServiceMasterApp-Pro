@@ -6,6 +6,7 @@ api=Api(prefix='/api')
 
 parser = reqparse.RequestParser()
 
+parser.add_argument('id', type=int)
 parser.add_argument('name',type=str)
 parser.add_argument('description', type=str)
 parser.add_argument('price',type=int)
@@ -13,6 +14,7 @@ parser.add_argument('time', type=int)
 
 
 services_fields = {
+    'id': fields.Integer,
     'name': fields.String,
     'description': fields.String,
     'price': fields.Integer,
@@ -20,13 +22,11 @@ services_fields = {
 }
 
 class ServiceResources(Resource):
-    @auth_required()
     @marshal_with(services_fields)
     def get(self):
         all_resources=Service.query.all()
         return all_resources
     
-    @auth_required()
     @marshal_with(services_fields)
     def post(self):
         args=parser.parse_args()
@@ -34,8 +34,46 @@ class ServiceResources(Resource):
         db.session.add(services)
         db.session.commit()
         return {'message' : 'service created'}, 200
-    
+     
 api.add_resource(ServiceResources, '/services')
+
+class ServiceResourceForDelete(Resource):
+    @marshal_with(services_fields)
+    def get(self,id):
+        all_resources=Service.query.get(id)
+        return all_resources
+    
+    @marshal_with(services_fields)
+    def post(self, id):
+        service=Service.query.get(id)
+        if not service:
+            return {'message' : 'invalid service'}, 404
+        db.session.delete(service)
+        db.session.commit()
+        return {'message' : 'service deleted'}, 200
+        
+api.add_resource(ServiceResourceForDelete, '/deleteservice/<int:id>')
+
+class ServiceResourceForEdit(Resource):
+    @marshal_with(services_fields)
+    def get(self,id):
+        all_resources=Service.query.get(id)
+        return all_resources
+    
+    @marshal_with(services_fields)
+    def post(self, id):
+        args=parser.parse_args()
+        service=Service.query.get(id)
+        if not service:
+            return {'message' : 'invalid service'}, 404
+        service.name=args.name
+        service.description=args.description
+        service.price=args.price
+        service.time=args.time        
+        db.session.commit()
+        return {'message' : 'service updated'}, 200
+        
+api.add_resource(ServiceResourceForEdit, '/editservice/<int:id>')
 
 parser.add_argument('id', type=int)
 parser.add_argument('email',type=str)
@@ -58,10 +96,29 @@ professional_fields = {
 }
 
 class ProfessionalData(Resource):
-    @auth_required()
     @marshal_with(professional_fields)
     def get(self):
         all_professionals = User.query.join(UserRoles).join(Role).filter(Role.name == 'professional').all()
         return all_professionals
     
 api.add_resource(ProfessionalData, '/professionals')
+
+servicerequest_fields = {
+    'servicereqid' : fields.Integer,
+    'cuser' : fields.Integer,
+    'puser' : fields.Integer,
+    'service_id' : fields.Integer,
+    'requestdate' : fields.DateTime,
+    'completedate' : fields.DateTime,
+    'status' : fields.String,
+    'rating' : fields.String,
+    'review' : fields.String
+}
+
+class ServiceRequestData(Resource):
+    @marshal_with(servicerequest_fields)
+    def get(self):
+        all_servicerequests = ServiceRequest.query.all()
+        return all_servicerequests
+    
+api.add_resource(ServiceRequestData, '/servicerequests')

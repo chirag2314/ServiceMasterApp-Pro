@@ -137,15 +137,15 @@ const ADashboard = {
     },
     // Navigate to Edit Service page
     editService(serviceId) {
-        router.push("/aeditservice");
+        router.push(`/aeditservice/` + serviceId);
     },
     // Delete a service
     deleteService(serviceId) {
-        router.push("/adeleteservice");
+        router.push(`/adeleteservice/` + serviceId);
     },
     // Navigate to Update Professional page
     updateProfessional(professionalId) {
-        router.push("/aupdateprofessional");
+        router.push(`/aupdateprofessional/` + professionalId);
     }
   }
 };
