@@ -102,7 +102,7 @@ const ADashboard = {
                     <td>{{ serviceRequest.servicereqid }}</td>
                     <td>{{ serviceRequest.cuser }}</td>
                     <td>{{ serviceRequest.puser }}</td>
-                    <td>{{ serviceRequest.service_id }}</td>
+                    <td>{{ serviceRequest.serviceid }}</td>
                     <td>{{ serviceRequest.requestdate }}</td>
                     <td>{{ serviceRequest.status }}</td>
                     </tr>

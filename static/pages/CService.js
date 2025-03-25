@@ -13,13 +13,13 @@ const CService = {
                 <th>Experience</th>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><a class="btn btn-primary" >
+                <tr v-for="prof in allProfessionals" :key=prof.id>
+                    <td>{{ prof.email }}</td>
+                    <td>{{ prof.name }}</td>
+                    <td>{{ prof.contact }}</td>
+                    <td>{{ prof.pincode }}</td>
+                    <td>{{ prof.experience }}</td>
+                    <td><a class="btn btn-primary" @click="submitinfo(prof.id,prof.service_id)">
                         Choose
                     </a></td> 
                 </tr>
@@ -27,14 +27,26 @@ const CService = {
         </table>
     </div>
     `,
+
+    props: ['serviceId'],
+
     data() {
-        return {
+        return{
             allProfessionals : []
-        }
+        };
     },
     async mounted(){
-        
+        const resProfessionals = await fetch(window.location.origin + `/api/serviceprofs/` + this.serviceId)
+        if (resProfessionals.ok) {
+            const data = await resProfessionals.json();
+            this.allProfessionals = data;
+        }
     },
+    methods:{
+        submitinfo(pid,sid){
+            router.push(`/cbookaservice/`+pid+`/`+sid);
+        },
+    }
 };
 
 export default CService;

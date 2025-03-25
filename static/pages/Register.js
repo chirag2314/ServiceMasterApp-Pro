@@ -36,7 +36,9 @@ const Register = {
           <div v-if="role === 'professional'">
           <div class="form-group mb-2">
             <label>Service</label>
-            <input v-model="service" type="text" class="form-control" placeholder="Service"/>
+            <select v-model="service" class="service">
+              <option v-for="s in services" :key="s.id" :value="s.id">{{ s.name }}</option>
+            </select>
           </div>
           <div class="form-group mb-2">
             <label>Experience</label>
@@ -51,6 +53,7 @@ const Register = {
   `,
   data() {
       return {
+        services: [],
         role: "",
         email: "",
         password: "",
@@ -61,6 +64,13 @@ const Register = {
         experience: "",
       };
     },
+  async mounted(){
+    const resServices = await fetch(window.location.origin + "/api/services")
+    if (resServices.ok) {
+        const data = await resServices.json();
+        this.services = data;
+    };
+  },
   methods: {
     async submitInfo() {
       const url = window.location.origin;

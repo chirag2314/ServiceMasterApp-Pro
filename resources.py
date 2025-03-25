@@ -80,9 +80,9 @@ parser.add_argument('email',type=str)
 parser.add_argument('name', type=str)
 parser.add_argument('pincode',type=str)
 parser.add_argument('contact', type=int)
-parser.add_argument('serviceid', type=int)
+parser.add_argument('service_id', type=int)
 parser.add_argument('experience', type=int)
-parser.add_argument('active', type=int)
+parser.add_argument('active', type=str)
 
 professional_fields = {
     'id' : fields.Integer,
@@ -90,7 +90,7 @@ professional_fields = {
     'name': fields.String,
     'pincode': fields.String,
     'contact': fields.Integer,
-    'serviceid': fields.Integer,
+    'service_id': fields.Integer,
     'experience': fields.Integer,
     'active': fields.String
 }
@@ -102,6 +102,31 @@ class ProfessionalData(Resource):
         return all_professionals
     
 api.add_resource(ProfessionalData, '/professionals')
+
+class ProfessionalResourceForApproval(Resource):
+    @marshal_with(professional_fields)
+    def get(self, id):
+        all_resources=User.query.get(id)
+        return all_resources
+    
+    def post(self, id):
+        args=parser.parse_args()
+        prof=User.query.get(id)
+        if not prof:
+            return {'message' : 'invalid professional'}, 404
+        prof.active=args.active
+        db.session.commit()
+        return {'message' : 'professional updated'}, 200
+    
+api.add_resource(ProfessionalResourceForApproval, '/aupdateprofessional/<int:id>')
+
+class ProfessionalResourceForBooking(Resource):
+    @marshal_with(professional_fields)
+    def get(self, id):
+        all_resources=User.query.all()
+        return all_resources
+    
+api.add_resource(ProfessionalResourceForBooking, '/serviceprofs/<int:id>')
 
 servicerequest_fields = {
     'servicereqid' : fields.Integer,
