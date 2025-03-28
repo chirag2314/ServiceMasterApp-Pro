@@ -1,4 +1,5 @@
 import router from "../utils/router.js";
+import store from "../utils/store.js"
 
 const Login = {
   template: `
@@ -46,7 +47,16 @@ const Login = {
 
         });
         if(res.ok){
+          store.commit('setLogin');
           const data = await res.json()
+          sessionStorage.setItem('token', data.token);
+          sessionStorage.setItem('role', data.role);
+          sessionStorage.setItem('email', data.email);
+          sessionStorage.setItem('id', data.id);
+          sessionStorage.setItem('name', data.name);
+          
+          //console.log(sessionStorage.getItem('token'))
+
           switch (data.role){
             case "admin":
               router.push("/adashboard");

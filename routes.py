@@ -1,7 +1,9 @@
+from datetime import datetime
 from flask import render_template_string, render_template, Flask, request, jsonify
 from flask_security import auth_required, current_user, roles_required
 from flask_security import SQLAlchemySessionUserDatastore
 from flask_security.utils import hash_password, verify_password
+from models import ServiceRequest
 
 def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, db ):
 
@@ -43,7 +45,6 @@ def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, d
         data=request.get_json()
         email=data.get('email')
         password=data.get('password')
-
         if not email or not password:
             return jsonify({'message' : 'invalid email or password'}), 404
         user=user_datastore.find_user(email = email)
@@ -51,6 +52,33 @@ def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, d
             return jsonify({'message' : 'invalid user'}), 404
         
         if verify_password(password, user.password):
-                return jsonify({'id': user.id, 'email': user.email, 'role': user.roles[0].name}), 200
+                return jsonify({'token': user.get_auth_token(), 'id': user.id, 'email': user.email, 'role': user.roles[0].name, 'name':user.name }), 200
         else:
             return jsonify({'message' : 'wrong password'})
+        
+    @app.route('/cbookaservice', methods=['POST'])
+    @auth_required('token')
+    def book_service_post():
+        data=request.get_json()
+
+        try:
+            requestdate = datetime.strptime(data.get('requestdate'), "%d/%m/%Y").date()
+            servicedate = datetime.strptime(data.get('servicedate'), "%Y-%m-%d").date()
+        except ValueError as e:
+            print(f"Error parsing dates: {e}")
+            return jsonify({'message': 'Invalid date format'}), 400
+
+        cuser=data.get('cuser')
+        sid=data.get('service_id')
+        puser=data.get('puser')
+        print(requestdate)
+        print(servicedate)
+        servreq=ServiceRequest(cuser=cuser,puser=puser,service_id=sid,requestdate=requestdate,servicedate=servicedate,status='Requested')
+        try:
+            db.session.add(servreq)
+            db.session.commit()
+            return jsonify({'message' : 'SR created'}), 200
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
+            return jsonify({'message' : 'error while creating SR'}), 408

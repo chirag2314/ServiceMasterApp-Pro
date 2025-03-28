@@ -47,6 +47,7 @@ const ADeleteService = {
                 method : 'POST',
                 headers : {
                     "Content-Type" : "application/json",
+                    'Authentication-Token' : sessionStorage.getItem('token'),
                 },
             });
             if(res.ok){

@@ -119,12 +119,20 @@ const ADashboard = {
     };
   },
   async mounted(){
-    const resProfessionals = await fetch(window.location.origin + "/api/professionals")
+    const resProfessionals = await fetch(window.location.origin + "/api/professionals",{
+        headers:{
+            'Authentication-Token' : sessionStorage.getItem('token'),
+        },
+    });
     if (resProfessionals.ok) {
         const data = await resProfessionals.json();
         this.professionals = data;
     }
-    const resServices = await fetch(window.location.origin + "/api/services")
+    const resServices = await fetch(window.location.origin + "/api/services",{
+        headers:{
+            'Authentication-Token' : sessionStorage.getItem('token'),
+        },
+    });
     if (resServices.ok) {
         const data = await resServices.json();
         this.services = data;

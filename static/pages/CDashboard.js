@@ -3,7 +3,7 @@ import router from "../utils/router.js";
 const CDashboard = {
     template: `
     <div>
-        <h1>Hello,</h1>
+        <h1>Hello, {{ custname }}</h1>
         <br>
         <div class="heading">
             <h2>Services for you:</h2>
@@ -60,12 +60,12 @@ const CDashboard = {
                     </td>
                     <td>
                         <span v-if="sr.status === 'Requested' || sr.status === 'Accepted'">
-                            <a class="btn btn-primary">
+                            <a class="btn btn-primary" @click="closeservice(sr.id)">
                                 <i class="fas fa-edit fa-xs"></i>
                                 Close Service
                             </a>
                         </span>
-                        <span v-else>Service is {{ sr.status }}</span>
+                        <div v-else>Service is {{ sr.status }}</div>
                     </td>
                 </tr>
             </tbody>
@@ -77,31 +77,48 @@ const CDashboard = {
             services: [],
             serviceRequests: [],
             user: [],
+            custname: "",
         };
     },
     async mounted(){
-        const resServReq = await fetch(window.location.origin + "/api/professionals")
-        if (resServReq.ok) {
-            const data = await resServReq.json();
-            this.serviceRequests = data;
-        }
-        const resServices = await fetch(window.location.origin + "/api/services")
+        const resUser = await fetch(window.location.origin + "/api/professionals",{
+            headers:{
+                'Authentication-Token' : sessionStorage.getItem('token'),
+            },
+        })
+        if (resUser.ok) {
+            const data = await resUser.json();
+            this.user = data;
+        };
+        const resServices = await fetch(window.location.origin + "/api/services",{
+            headers:{
+                'Authentication-Token' : sessionStorage.getItem('token'),
+            },
+        })
         if (resServices.ok) {
             const data = await resServices.json();
             this.services = data;
         }
-        const resUser = await fetch(window.location.origin + "/api/servicerequests")
-        if (resUser.ok) {
-            const data = await resUser.json();
-            this.user = data;
+        const resServReq = await fetch(window.location.origin + "/api/servicerequests",{
+            headers:{
+                'Authentication-Token' : sessionStorage.getItem('token')
+            },
+        })
+        if (resServReq.ok) {
+            const data = await resServReq.json();
+            this.serviceRequests = data;
         }
+        this.custname=sessionStorage.getItem('name')
     },
     methods: {
         chooseprof(serviceId){
-            router.push(`/cservice/`+serviceId)
+            router.push(`/cservice/`+serviceId);
         },
-    }
+        // closeservice(srid){
+        //     router.push(`/ccloseservice/`+srid);
+        // },
+    },
 
-}
+};
 
 export default CDashboard;

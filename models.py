@@ -51,6 +51,7 @@ class ServiceRequest(db.Model):
     service_id=db.Column(db.Integer, db.ForeignKey('service.id'), nullable=False)
     requestdate=db.Column(db.DateTime, nullable=False)
     completedate=db.Column(db.DateTime, nullable=True)
+    servicedate=db.Column(db.DateTime, nullable=False)
     status=db.Column(db.String(32), nullable=False)
     rating=db.Column(db.String(32), nullable=True)
     review=db.Column(db.String(512), nullable=True)

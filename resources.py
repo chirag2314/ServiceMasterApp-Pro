@@ -5,6 +5,8 @@ from models import db, Service, User, ServiceRequest, UserRoles, Role
 api=Api(prefix='/api')
 
 parser = reqparse.RequestParser()
+profparser = reqparse.RequestParser()
+srparser = reqparse.RequestParser()
 
 parser.add_argument('id', type=int)
 parser.add_argument('name',type=str)
@@ -22,11 +24,13 @@ services_fields = {
 }
 
 class ServiceResources(Resource):
+    #@auth_required('token')
     @marshal_with(services_fields)
     def get(self):
         all_resources=Service.query.all()
         return all_resources
     
+    #@auth_required('token')
     @marshal_with(services_fields)
     def post(self):
         args=parser.parse_args()
@@ -38,11 +42,13 @@ class ServiceResources(Resource):
 api.add_resource(ServiceResources, '/services')
 
 class ServiceResourceForDelete(Resource):
+    @auth_required('token')
     @marshal_with(services_fields)
     def get(self,id):
         all_resources=Service.query.get(id)
         return all_resources
     
+    @auth_required('token')
     @marshal_with(services_fields)
     def post(self, id):
         service=Service.query.get(id)
@@ -55,11 +61,13 @@ class ServiceResourceForDelete(Resource):
 api.add_resource(ServiceResourceForDelete, '/deleteservice/<int:id>')
 
 class ServiceResourceForEdit(Resource):
+    @auth_required('token')
     @marshal_with(services_fields)
     def get(self,id):
         all_resources=Service.query.get(id)
         return all_resources
     
+    @auth_required('token')
     @marshal_with(services_fields)
     def post(self, id):
         args=parser.parse_args()
@@ -75,14 +83,14 @@ class ServiceResourceForEdit(Resource):
         
 api.add_resource(ServiceResourceForEdit, '/editservice/<int:id>')
 
-parser.add_argument('id', type=int)
-parser.add_argument('email',type=str)
-parser.add_argument('name', type=str)
-parser.add_argument('pincode',type=str)
-parser.add_argument('contact', type=int)
-parser.add_argument('service_id', type=int)
-parser.add_argument('experience', type=int)
-parser.add_argument('active', type=str)
+profparser.add_argument('id', type=int)
+profparser.add_argument('email',type=str)
+profparser.add_argument('name', type=str)
+profparser.add_argument('pincode',type=str)
+profparser.add_argument('contact', type=int)
+profparser.add_argument('service_id', type=int)
+profparser.add_argument('experience', type=int)
+profparser.add_argument('active', type=str)
 
 professional_fields = {
     'id' : fields.Integer,
@@ -96,6 +104,7 @@ professional_fields = {
 }
 
 class ProfessionalData(Resource):
+    @auth_required('token')
     @marshal_with(professional_fields)
     def get(self):
         all_professionals = User.query.join(UserRoles).join(Role).filter(Role.name == 'professional').all()
@@ -104,13 +113,15 @@ class ProfessionalData(Resource):
 api.add_resource(ProfessionalData, '/professionals')
 
 class ProfessionalResourceForApproval(Resource):
+    @auth_required('token')
     @marshal_with(professional_fields)
     def get(self, id):
         all_resources=User.query.get(id)
         return all_resources
     
+    @auth_required('token')
     def post(self, id):
-        args=parser.parse_args()
+        args=profparser.parse_args()
         prof=User.query.get(id)
         if not prof:
             return {'message' : 'invalid professional'}, 404
@@ -121,12 +132,24 @@ class ProfessionalResourceForApproval(Resource):
 api.add_resource(ProfessionalResourceForApproval, '/aupdateprofessional/<int:id>')
 
 class ProfessionalResourceForBooking(Resource):
+    @auth_required('token')
     @marshal_with(professional_fields)
     def get(self, id):
         all_resources=User.query.all()
         return all_resources
     
 api.add_resource(ProfessionalResourceForBooking, '/serviceprofs/<int:id>')
+
+srparser.add_argument('servicereqid', type=int)
+srparser.add_argument('cuser',type=int)
+srparser.add_argument('puser', type=int)
+srparser.add_argument('service_id',type=int)
+srparser.add_argument('requestdate', type=str)
+srparser.add_argument('completedate', type=str)
+srparser.add_argument('completedate', type=str)
+srparser.add_argument('status', type=str)
+srparser.add_argument('rating', type=str)
+srparser.add_argument('review', type=str)
 
 servicerequest_fields = {
     'servicereqid' : fields.Integer,
@@ -135,12 +158,14 @@ servicerequest_fields = {
     'service_id' : fields.Integer,
     'requestdate' : fields.DateTime,
     'completedate' : fields.DateTime,
+    'servicedate' : fields.DateTime,
     'status' : fields.String,
     'rating' : fields.String,
     'review' : fields.String
 }
 
 class ServiceRequestData(Resource):
+    @auth_required('token')
     @marshal_with(servicerequest_fields)
     def get(self):
         all_servicerequests = ServiceRequest.query.all()

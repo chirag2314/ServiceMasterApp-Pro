@@ -26,7 +26,11 @@ const AUpdateProfessional = {
       };
     },  
     async mounted(){
-      const resProf = await fetch(`${window.location.origin}/api/aupdateprofessional/${this.professionalId}`)
+      const resProf = await fetch(`${window.location.origin}/api/aupdateprofessional/${this.professionalId}`,{
+        headers: {
+          'Authentication-Token' : sessionStorage.getItem('token'),
+        },
+      });
       if(resProf.ok) {
         const data = await resProf.json();
         this.professionals=data;
@@ -39,6 +43,7 @@ const AUpdateProfessional = {
           method : 'POST',
           headers : {
             "Content-Type" : "application/json",
+            'Authentication-Token' : sessionStorage.getItem('token'),
           },
           body : JSON.stringify({active: this.active}),
         });

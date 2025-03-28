@@ -45,7 +45,11 @@ const AEditService = {
         };
     },  
     async mounted(){
-        const resService = await fetch(`${window.location.origin}/api/editservice/${this.serviceId}`)
+        const resService = await fetch(`${window.location.origin}/api/editservice/${this.serviceId}`,{
+            headers: {
+                'Authentication-Token' : sessionStorage.getItem('token'),
+            },
+        })
         if(resService.ok) {
             const data = await resService.json();
             this.services=data;
@@ -58,6 +62,7 @@ const AEditService = {
                 method : 'POST',
                 headers : {
                     "Content-Type" : "application/json",
+                    'Authentication-Token' : sessionStorage.getItem('token'),
                 },
                 body : JSON.stringify({ name: this.servicename, description: this.servicedescription, price: this.serviceprice, time: this.servicetime}),
             });

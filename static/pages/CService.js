@@ -36,7 +36,11 @@ const CService = {
         };
     },
     async mounted(){
-        const resProfessionals = await fetch(window.location.origin + `/api/serviceprofs/` + this.serviceId)
+        const resProfessionals = await fetch(window.location.origin + `/api/serviceprofs/` + this.serviceId,{
+            headers:{
+                'Authentication-Token' : sessionStorage.getItem('token'),
+            },
+        });
         if (resProfessionals.ok) {
             const data = await resProfessionals.json();
             this.allProfessionals = data;
