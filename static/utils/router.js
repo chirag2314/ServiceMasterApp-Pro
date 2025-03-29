@@ -28,11 +28,11 @@ const routes = [
     {path : "/adeleteservice/:serviceId", component : ADeleteService, props: true},
     {path : "/aupdateprofessional/:professionalId", component : AUpdateProfessional, props: true},
     {path : "/cbookaservice/:professionalId/:serviceId", component : CBookAService, props: true},
-    {path : "/ccloseservice", component : CCloseService},
+    {path : "/ccloseservice/:srid", component : CCloseService, props: true},
     {path : "/cprofile", component : CProfile},
     {path : "/cservice/:serviceId", component : CService, props: true},
     {path : "/pdashboard", component : PDashboard},
-    {path : "/peditservicerequest", component : PEditServiceRequest},
+    {path : "/peditservicerequest/:srid", component : PEditServiceRequest, props: true},
     {path : "/pprofile", component : PProfile},
 ];
 

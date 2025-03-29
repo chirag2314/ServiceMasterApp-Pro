@@ -11,8 +11,4 @@ def create_data(user_datastore : SQLAlchemyUserDatastore):
 
     if not user_datastore.find_user(email = "admin@servicemaster.com"):
         user_datastore.create_user(email = "admin@servicemaster.com", password=hash_password('admin'), roles=['admin'], name='Admin')
-    if not user_datastore.find_user(email = "firstuser@servicemaster.com"):
-        user_datastore.create_user(email = "firstuser@servicemaster.com", password=hash_password('firstuser'), roles=['customer'], name='First Cust')
-    if not user_datastore.find_user(email = "firstprof@servicemaster.com"):
-        user_datastore.create_user(email = "firstprof@servicemaster.com", password=hash_password('firstprof'), roles=['professional'], name='First Prof')
     db.session.commit()

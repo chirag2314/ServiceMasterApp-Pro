@@ -82,3 +82,37 @@ def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, d
             db.session.rollback()
             print(f"Error: {e}")
             return jsonify({'message' : 'error while creating SR'}), 408
+        
+    @app.route('/ccloseservice/<int:srid>', methods=['POST'])
+    @auth_required('token')
+    def close_service_post(srid):
+        data=request.get_json()
+        rating=data.get('rating')
+        review=data.get('review')
+        servreq=ServiceRequest.query.get(srid)
+        servreq.rating=rating
+        servreq.review=review
+        servreq.completedate=datetime.today().date()
+        servreq.status='Closed'
+        try:
+            db.session.commit()
+            return jsonify({'message' : 'SR Closed'}), 200
+        except:
+            db.session.rollback()
+            return jsonify({'message' : 'error while closing SR'}), 408
+        
+    @app.route('/peditservicerequest/<int:srid>', methods=['POST'])
+    @auth_required('token')
+    def edit_service_post(srid):
+        data=request.get_json()
+        status=data.get('status')
+        servreq=ServiceRequest.query.get(srid)
+        servreq.status=status
+        if(status=='Closed'):
+            servreq.completedate=datetime.today().date()
+        try:
+            db.session.commit()
+            return jsonify({'message' : 'SR modified'}), 200
+        except:
+            db.session.rollback()
+            return jsonify({'message' : 'error while editing SR'}), 408

@@ -102,7 +102,7 @@ const ADashboard = {
                     <td>{{ serviceRequest.servicereqid }}</td>
                     <td>{{ serviceRequest.cuser }}</td>
                     <td>{{ serviceRequest.puser }}</td>
-                    <td>{{ serviceRequest.serviceid }}</td>
+                    <td>{{ serviceRequest.service_id }}</td>
                     <td>{{ serviceRequest.requestdate }}</td>
                     <td>{{ serviceRequest.status }}</td>
                     </tr>
@@ -127,7 +127,7 @@ const ADashboard = {
     if (resProfessionals.ok) {
         const data = await resProfessionals.json();
         this.professionals = data;
-    }
+    };
     const resServices = await fetch(window.location.origin + "/api/services",{
         headers:{
             'Authentication-Token' : sessionStorage.getItem('token'),
@@ -136,7 +136,16 @@ const ADashboard = {
     if (resServices.ok) {
         const data = await resServices.json();
         this.services = data;
-    }
+    };
+    const resServiceReq = await fetch(window.location.origin + "/api/servicerequests",{
+        headers:{
+            'Authentication-Token' : sessionStorage.getItem('token'),
+        },
+    });
+    if (resServiceReq.ok) {
+        const data = await resServiceReq.json();
+        this.serviceRequests = data;
+    };
   },
   methods: {
     // Navigate to Add Service page

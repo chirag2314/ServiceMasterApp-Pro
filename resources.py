@@ -135,7 +135,7 @@ class ProfessionalResourceForBooking(Resource):
     @auth_required('token')
     @marshal_with(professional_fields)
     def get(self, id):
-        all_resources=User.query.all()
+        all_resources=User.query.filter_by(service_id=id, active='Approved').all()
         return all_resources
     
 api.add_resource(ProfessionalResourceForBooking, '/serviceprofs/<int:id>')
@@ -172,3 +172,21 @@ class ServiceRequestData(Resource):
         return all_servicerequests
     
 api.add_resource(ServiceRequestData, '/servicerequests')
+
+class ServiceRequestDataForPDashboard(Resource):
+    #@auth_required('token')
+    @marshal_with(servicerequest_fields)
+    def get(self,id):
+        all_resources=ServiceRequest.query.filter_by(puser=id).all()
+        return all_resources
+    
+api.add_resource(ServiceRequestDataForPDashboard, '/servicerequestsp/<int:id>')
+
+class ServiceRequestDataForCDashboard(Resource):
+    #@auth_required('token')
+    @marshal_with(servicerequest_fields)
+    def get(self,id):
+        all_resources=ServiceRequest.query.filter_by(cuser=id).all()
+        return all_resources
+    
+api.add_resource(ServiceRequestDataForCDashboard, '/servicerequestsc/<int:id>')

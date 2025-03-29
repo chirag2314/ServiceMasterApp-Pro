@@ -60,7 +60,7 @@ const CDashboard = {
                     </td>
                     <td>
                         <span v-if="sr.status === 'Requested' || sr.status === 'Accepted'">
-                            <a class="btn btn-primary" @click="closeservice(sr.id)">
+                            <a class="btn btn-primary" @click="closeservice(sr.servicereqid)">
                                 <i class="fas fa-edit fa-xs"></i>
                                 Close Service
                             </a>
@@ -99,7 +99,7 @@ const CDashboard = {
             const data = await resServices.json();
             this.services = data;
         }
-        const resServReq = await fetch(window.location.origin + "/api/servicerequests",{
+        const resServReq = await fetch(window.location.origin + "/api/servicerequestsc/"+ sessionStorage.getItem('id'),{
             headers:{
                 'Authentication-Token' : sessionStorage.getItem('token')
             },
@@ -114,9 +114,10 @@ const CDashboard = {
         chooseprof(serviceId){
             router.push(`/cservice/`+serviceId);
         },
-        // closeservice(srid){
-        //     router.push(`/ccloseservice/`+srid);
-        // },
+        closeservice(srid){
+            console.log(srid)
+            router.push(`/ccloseservice/`+srid);
+        },
     },
 
 };
