@@ -61,7 +61,8 @@ const ADashboard = {
                 <table class="table table-bordered table-striped table-sm">
                     <thead>
                         <tr>
-                            <th>Username</th>
+                            <th>Prof ID</th>
+                            <th>Email</th>
                             <th>Name</th>
                             <th>Contact</th>
                             <th>Service</th>
@@ -71,6 +72,7 @@ const ADashboard = {
                     </thead>
                     <tbody>
                         <tr v-for="professional in filteredProfessionals" :key="professional.id">
+                            <td>{{ professional.id}} </td>
                             <td>{{ professional.email }}</td>
                             <td>{{ professional.name }}</td>
                             <td>{{ professional.contact }}</td>
@@ -98,10 +100,12 @@ const ADashboard = {
                     <thead>
                         <tr>
                             <th>SR ID</th>
-                            <th>Customer</th>
-                            <th>Professional</th>
-                            <th>Service</th>
+                            <th>Customer ID</th>
+                            <th>Professional ID</th>
+                            <th>Service ID</th>
                             <th>Request Date</th>
+                            <th>Service Date</th>
+                            <th>Completed Date</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -112,6 +116,8 @@ const ADashboard = {
                             <td>{{ serviceRequest.puser }}</td>
                             <td>{{ serviceRequest.service_id }}</td>
                             <td>{{ serviceRequest.requestdate }}</td>
+                            <td>{{ serviceRequest.servicedate }}</td>
+                            <td>{{ serviceRequest.completedate }}</td>
                             <td>{{ serviceRequest.status }}</td>
                         </tr>
                     </tbody>
