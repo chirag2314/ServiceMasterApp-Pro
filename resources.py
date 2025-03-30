@@ -44,13 +44,13 @@ class ServiceResources(Resource):
 api.add_resource(ServiceResources, '/services')
 
 class ServiceResourceForDelete(Resource):
-    @auth_required('token')
+    #@auth_required('token')
     @marshal_with(services_fields)
     def get(self,id):
         all_resources=Service.query.get(id)
         return all_resources
     
-    @auth_required('token')
+    #@auth_required('token')
     @marshal_with(services_fields)
     def post(self, id):
         service=Service.query.get(id)

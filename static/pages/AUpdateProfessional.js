@@ -2,20 +2,43 @@ import router from "../utils/router.js";
 
 const AUpdateProfessional = {
     template: `
-    <div>
-      <h1>Update Professional</h1>
-      <h2>You are currently updating the Status for {{ professionals.name }}</h2>
-      <div class="form-group">
-          <label for="status">Professional Status</label>
-          <select v-model="active" class="form-control">
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
-          </select> 
-      <br>
-      <input type="submit" value="Update Professional" class="btn btn-success" @click="submitinfo">
-      </div>
+    <div class="container mt-4">
+    <!-- Title -->
+    <h1 class="text-center mb-4">Update Professional</h1>
+
+    <!-- Confirmation Message -->
+    <h2 class="text-center mb-4">
+        You are currently updating the status for <strong>{{ professionals.name }}</strong>
+    </h2>
+
+    <!-- Update Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form @submit.prevent="submitinfo">
+                        <!-- Status Selection -->
+                        <div class="form-group mb-3">
+                            <label for="status" class="form-label">Professional Status</label>
+                            <select v-model="active" id="status" class="form-control" required>
+                                <option value="Pending">Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-group text-center mt-4">
+                            <button type="submit" class="btn btn-success" @click="submitinfo">
+                                <i class="fas fa-save"></i> Update Professional
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
     `,
     props: ['professionalId'],
 

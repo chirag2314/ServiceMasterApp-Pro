@@ -6,10 +6,13 @@ import createinitialdata
 from dotenv import load_dotenv
 import os
 import resources
+from worker import celery_init_app
+import flask_excel as excel
 
 load_dotenv()
 
 
+celery_app = None
 
 def create_app():
     app = Flask(__name__)
@@ -30,6 +33,7 @@ def create_app():
     
     cache.init_app(app)
     db.init_app(app)
+    celery_app=celery_init_app(app)
 
     with app.app_context():
         from models import User, Role
@@ -52,5 +56,6 @@ def create_app():
     return app
 
 app = create_app()
+excel.init_excel(app)
 
 # commenting to resolve commit errors

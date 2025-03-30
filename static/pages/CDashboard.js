@@ -2,45 +2,52 @@ import router from "../utils/router.js";
 
 const CDashboard = {
     template: `
-    <div>
-        <h1>Hello, {{ custname }}</h1>
-        <br>
-        <h2 align="center" v-if="active === 'Pending'">You are yet to be approved by the Admin</h2>
-        <h2 align="center" v-if="active === 'Rejected'">You are Blocked by the Admin</h2>
-        <div v-if="active === 'Approved'">
-            <div class="heading">
-                <h2>Services for you:</h2>
-                <div class="container-fluid">
-                    <form class="searchbar">
-                        <input v-model="searchquery" type="text" class="form-control" id="search" name="search" placeholder="Search for services">
-                    </form>
-                </div>
+    <div class="container mt-4">
+    <h1 class="text-center mb-4">Hello, {{ custname }}</h1>
+
+    <h2 class="text-center mb-4" v-if="active === 'Pending'">You are yet to be approved by the Admin</h2>
+    <h2 class="text-center mb-4" v-if="active === 'Rejected'">You are Blocked by the Admin</h2>
+
+    <div v-if="active === 'Approved'">
+        <!-- Services Section -->
+        <div class="heading mb-4">
+            <h2>Services for you:</h2>
+            <div class="container-fluid">
+                <form class="searchbar mb-3">
+                    <input v-model="searchquery" type="text" class="form-control" id="search" name="search" placeholder="Search for services">
+                </form>
             </div>
-            <br>
-            <div class="service-list">
-                <div v-for="s in filteredServices" :key="s.id" class="service">
-                    <div class="service-info">
-                        <h4>{{ s.name }}</h4>
-                        <p>{{ s.description }}</p>
-                        <p>Price: {{ s.price }}/-</p>
-                        <form class="profbutton" @click="chooseprof(s.id)">
-                            <input type="submit" value="Choose a Professional" class="btn btn-success">
-                        </form>
+        </div>
+
+        <div class="service-list row">
+            <div v-for="s in filteredServices" :key="s.id" class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ s.name }}</h4>
+                        <p class="card-text">{{ s.description }}</p>
+                        <p class="card-text">Price: {{ s.price }}/-</p>
+                        <button class="btn btn-success" @click="chooseprof(s.id)">
+                            Choose a Professional
+                        </button>
                     </div>
                 </div>
             </div>
-            <br>
-            <h3>Your Services:</h3>
-            <table class="table">
+        </div>
+
+        <h3 class="mt-5">Your Services:</h3>
+        <div class="table-container p-4 border rounded shadow-sm mt-4">
+            <table class="table table-bordered table-striped table-sm">
                 <thead>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Service ID</th>
-                    <th>Status</th>
-                    <th>Completed Date</th>
-                    <th>Rating</th>
-                    <th>Review</th>
-                    <th>Action</th>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Service ID</th>
+                        <th>Status</th>
+                        <th>Completed Date</th>
+                        <th>Rating</th>
+                        <th>Review</th>
+                        <th>Action</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <tr v-for="sr in serviceRequests" :key="sr.servicereqid">
@@ -62,14 +69,12 @@ const CDashboard = {
                         </td>
                         <td>
                             <span v-if="sr.status === 'Requested' || sr.status === 'Accepted'">
-                                <a class="btn btn-primary" @click="editservicerequest(sr.servicereqid)">
-                                    <i class="fas fa-edit fa-xs"></i>
-                                    Edit Service
-                                </a>
-                                <a class="btn btn-primary" @click="closeservice(sr.servicereqid)">
-                                    <i class="fas fa-edit fa-xs"></i>
-                                    Close Service
-                                </a>
+                                <button class="btn btn-primary" @click="editservicerequest(sr.servicereqid)">
+                                    <i class="fas fa-edit fa-xs"></i> Edit Service
+                                </button>
+                                <button class="btn btn-danger" @click="closeservice(sr.servicereqid)">
+                                    <i class="fas fa-times fa-xs"></i> Close Service
+                                </button>
                             </span>
                             <div v-else>Service is {{ sr.status }}</div>
                         </td>
@@ -78,6 +83,7 @@ const CDashboard = {
             </table>
         </div>
     </div>
+</div>
     `,
     data(){
         return{

@@ -2,36 +2,59 @@ import router from "../utils/router.js";
 
 const AEditService = {
     template: `
-    <div>
-        <h1>Edit Service</h1>
-        <h2 class="text-center text-danger">
-            You are editing the service: {{ services.name }}?
-        </h2>
-        <div class="form-group">
-            <div>
-                <label for="servicename" class="form-label">Name
-                    <input v-model="servicename" type="text" id="servicename" required>
-                </label>
-                <br>
+    <div class="container mt-4">
+    <!-- Title -->
+    <h1 class="text-center mb-4">Edit Service</h1>
 
-                <label for="serviceprice" class="form-label">Price
-                    <input v-model="serviceprice" type="text" id="serviceprice" required>
-                </label>
-                <br>
+    <!-- Confirmation Message -->
+    <h2 class="text-center mb-4 text-danger">
+        You are editing the service: <strong>{{ services.name }}</strong>?
+    </h2>
 
-                <label for="servicedescription" class="form-label">Description
-                    <input v-model="servicedescription" type="text" id="servicedescription" required>
-                </label>
-                <br>
+    <!-- Edit Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="text-center mb-4">Edit Service Details</h4>
+                    <form @submit.prevent="submitinfo">
+                        <!-- Service Name -->
+                        <div class="form-group mb-3">
+                            <label for="servicename" class="form-label">Service Name</label>
+                            <input v-model="servicename" type="text" id="servicename" class="form-control" required>
+                        </div>
 
-                <label for="servicetime" class="form-label">Time
-                    <input v-model="servicetime" type="text" id="servicetime"  required>
-                </label>
-                <br>
-                <input type="submit" value="Edit Service" class="btn btn-success" @click="submitinfo">
+                        <!-- Service Price -->
+                        <div class="form-group mb-3">
+                            <label for="serviceprice" class="form-label">Price</label>
+                            <input v-model="serviceprice" type="text" id="serviceprice" class="form-control" required>
+                        </div>
+
+                        <!-- Service Description -->
+                        <div class="form-group mb-3">
+                            <label for="servicedescription" class="form-label">Description</label>
+                            <input v-model="servicedescription" type="text" id="servicedescription" class="form-control" required>
+                        </div>
+
+                        <!-- Service Time -->
+                        <div class="form-group mb-4">
+                            <label for="servicetime" class="form-label">Time</label>
+                            <input v-model="servicetime" type="text" id="servicetime" class="form-control" required>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-success" @click="submitinfo">
+                                <i class="fas fa-save"></i> Edit Service
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+</div>
+
     `,
     props: ['serviceId'],
 

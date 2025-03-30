@@ -2,19 +2,44 @@ import router from "../utils/router.js";
 
 const CBookAService = {
     template :  `
-    <div>
-        <h1>Book your Service</h1>
-        <h4>Check your booking</h4>
-            <p>Service Name : {{ services.name }}</p>
-            <p>Professional Name: {{ professional.name }}</p>
-            <p>Customer Name: {{ customer_name }}</p>
-            <p>Price: Rs {{ services.price }}/-</p>
-            <p><label>Service Date:  </label><input v-model="serviceDate" type="date"></p>
-            <p id="date">Booking Date: {{ bookingDate }}</p>
-        <button class="btn btn-success" @click="bookService()">
-            Book
-        </button>
+    <div class="container mt-4">
+    <!-- Title -->
+    <h1 class="text-center mb-4">Book Your Service</h1>
+
+    <!-- Booking Details -->
+    <h4 class="text-center mb-3">Check your booking</h4>
+
+    <!-- Booking Information -->
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <p><strong>Service Name:</strong> {{ services.name }}</p>
+                    <p><strong>Professional Name:</strong> {{ professional.name }}</p>
+                    <p><strong>Customer Name:</strong> {{ customer_name }}</p>
+                    <p><strong>Price:</strong> Rs {{ services.price }}/-</p>
+
+                    <!-- Service Date Input -->
+                    <div class="form-group mb-3">
+                        <label for="serviceDate" class="form-label">Service Date:</label>
+                        <input v-model="serviceDate" type="date" id="serviceDate" class="form-control" required>
+                    </div>
+
+                    <!-- Booking Date -->
+                    <p><strong>Booking Date:</strong> {{ bookingDate }}</p>
+
+                    <!-- Book Button -->
+                    <div class="form-group text-center mt-4">
+                        <button class="btn btn-success" @click="bookService()">
+                            <i class="fas fa-calendar-check"></i> Book Service
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+
     `,
 
     props: ['professionalId','serviceId'],

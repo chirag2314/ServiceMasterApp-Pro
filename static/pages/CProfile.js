@@ -2,18 +2,39 @@ import router from "../utils/router.js";
 
 const CProfile = {
     template :  `
-    <div>
-        <h1>Welcome, {{ name }}</h1>
-    <h2 class="text-muted">{{ email }}, {{ role }}</h2>
-    <h4>Edit Profile</h4>
+    <div class="container mt-4">
+    <!-- Welcome Message -->
+    <h1 class="text-center mb-4">Welcome, {{ name }}</h1>
 
-    <form @submit.prevent="submitinfo">
-        <label for="password" class="form-label"> Change Password: 
-            <input v-model="password" type="password" name="password" id="password" class="form-control" required>
-        </label>
-        <input type="submit" value="Save Changes" class="btn btn-success">
-    </form>
+    <!-- User Info -->
+    <h2 class="text-center text-muted mb-4">{{ email }}, {{ role }}</h2>
+
+    <!-- Edit Profile Section -->
+    <h4 class="text-center mb-3">Edit Profile</h4>
+
+    <!-- Edit Profile Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <!-- Password Input -->
+                    <div class="form-group mb-3">
+                        <label for="password" class="form-label">Change Password:</label>
+                        <input v-model="password" type="password" name="password" id="password" class="form-control" required>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-group text-center mt-4">
+                        <button type="submit" class="btn btn-success" @click=submitinfo>
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+
     `,
     data(){
         return {
