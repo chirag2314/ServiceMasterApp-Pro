@@ -3,9 +3,9 @@ from flask import render_template_string, render_template, Flask, request, jsoni
 from flask_security import auth_required, current_user, roles_required
 from flask_security import SQLAlchemySessionUserDatastore
 from flask_security.utils import hash_password, verify_password
-from models import ServiceRequest
+from models import ServiceRequest, User
 
-def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, db ):
+def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, db ,cache):
 
     @app.route('/')
     def index():
@@ -52,11 +52,12 @@ def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, d
             return jsonify({'message' : 'invalid user'}), 404
         
         if verify_password(password, user.password):
-                return jsonify({'token': user.get_auth_token(), 'id': user.id, 'email': user.email, 'role': user.roles[0].name, 'name':user.name }), 200
+                return jsonify({'token': user.get_auth_token(), 'id': user.id, 'email': user.email, 'role': user.roles[0].name, 'name':user.name , 'active':user.active}), 200
         else:
             return jsonify({'message' : 'wrong password'})
         
     @app.route('/cbookaservice', methods=['POST'])
+    @roles_required('customer')
     @auth_required('token')
     def book_service_post():
         data=request.get_json()
@@ -84,6 +85,7 @@ def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, d
             return jsonify({'message' : 'error while creating SR'}), 408
         
     @app.route('/ccloseservice/<int:srid>', methods=['POST'])
+    @roles_required('customer')
     @auth_required('token')
     def close_service_post(srid):
         data=request.get_json()
@@ -102,6 +104,7 @@ def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, d
             return jsonify({'message' : 'error while closing SR'}), 408
         
     @app.route('/peditservicerequest/<int:srid>', methods=['POST'])
+    @roles_required('professional')
     @auth_required('token')
     def edit_service_post(srid):
         data=request.get_json()
@@ -116,3 +119,33 @@ def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, d
         except:
             db.session.rollback()
             return jsonify({'message' : 'error while editing SR'}), 408
+
+    @app.route('/edituser/<int:uid>', methods=['POST'])
+    @auth_required('token')
+    def edit_user(uid):
+        data=request.get_json()
+        user=user_datastore.find_user(id = uid)
+        user.password=hash_password(data.get('password'))
+        try:
+            db.session.commit()
+            return jsonify({'message' : 'password modified'}), 200
+        except:
+            db.session.rollback()
+            return jsonify({'message' : 'error while changing password'}), 408
+        
+    @app.route('/ceditservicerequest/<int:srid>', methods=['POST'])
+    @roles_required('customer')
+    @auth_required('token')
+    def edit_servicerequest_post(srid):
+        data=request.get_json()
+        servicedate = datetime.strptime(data.get('servicedate'), "%Y-%m-%d").date()
+        servreq=ServiceRequest.query.get(srid)
+        servreq.servicedate=servicedate
+        try:
+            db.session.commit()
+            return jsonify({'message' : 'SR modified'}), 200
+        except:
+            db.session.rollback()
+            return jsonify({'message' : 'error while editing SR'}), 408
+        
+# commenting to resolve commit errors

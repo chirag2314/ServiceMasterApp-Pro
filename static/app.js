@@ -15,3 +15,5 @@ new Vue({
         Navbar,
     },
 }) 
+
+// commenting to resolve commit errors

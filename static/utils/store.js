@@ -20,3 +20,5 @@ const store = new Vuex.Store({
   });
   
   export default store;
+
+  // commenting to resolve commit errors

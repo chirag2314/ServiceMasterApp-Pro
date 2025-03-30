@@ -50,7 +50,11 @@ const ADashboard = {
             <div class="heading">
                 <h2 class="text-muted">Professionals</h2>
             </div>
-
+            <div class="container-fluid">
+                <form class="searchbar">
+                    <input v-model="searchquery" type="text" class="form-control" id="search" name="search" placeholder="Search for professionals">
+                </form>
+            </div>
             <table class="table">
                 <thead>
                     <tr>
@@ -63,7 +67,7 @@ const ADashboard = {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="professional in professionals" :key="professional.id">
+                    <tr v-for="professional in filteredProfessionals" :key="professional.id">
                     <td>{{ professional.email }}</td>
                     <td>{{ professional.name }}</td>
                     <td>{{ professional.contact }}</td>
@@ -115,9 +119,25 @@ const ADashboard = {
     return {
       services: [],
       professionals: [],
-      serviceRequests: []
+      serviceRequests: [],
+      searchquery: "",
     };
   },
+
+  computed: {
+    filteredProfessionals() {
+      if (!this.searchquery) {
+        return this.professionals;
+      }
+      const query = this.searchquery.toLowerCase();
+      return this.professionals.filter(professional => {
+        return (
+          professional.name.toLowerCase().includes(query)
+        );
+      });
+    }
+  },
+
   async mounted(){
     const resProfessionals = await fetch(window.location.origin + "/api/professionals",{
         headers:{
@@ -156,14 +176,13 @@ const ADashboard = {
     editService(serviceId) {
         router.push(`/aeditservice/` + serviceId);
     },
-    // Delete a service
     deleteService(serviceId) {
         router.push(`/adeleteservice/` + serviceId);
     },
     // Navigate to Update Professional page
     updateProfessional(professionalId) {
         router.push(`/aupdateprofessional/` + professionalId);
-    }
+    },
   }
 };
 

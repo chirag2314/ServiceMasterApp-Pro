@@ -1,17 +1,12 @@
 import router from "../utils/router.js";
 
-const PEditServiceRequest = {
+const CEditServiceRequest = {
     template :  `
     <div>
  <h1>Update Service Request</h1>
-    <h2>You are currently updating the Status for Request </h2>
+    <h2>You are currently updating the Status for Request</h2>
     <form  @submit.prevent="updateservice">
-        <label for="status">Service Request Status</label>
-        <select v-model="status" name="status" id="status">
-          <option value="Accepted">Accepted</option>
-          <option value="Declined">Declined</option>
-          <option value="Closed">Closed</option>
-        </select> 
+        <label>Service Date:  </label><input v-model="serviceDate" type="date"> 
     <br>
     <input type="submit" value="Update Request" class="btn btn-success">
     </form>
@@ -22,23 +17,23 @@ const PEditServiceRequest = {
 
     data(){
       return {
-        status: ""
+        serviceDate: ""
       };
     },
     methods: {
       async updateservice(){
-        const res = await fetch(window.location.origin + `/peditservicerequest/` + this.srid, {
+        const res = await fetch(window.location.origin + `/ceditservicerequest/` + this.srid, {
           method: 'POST',
           headers : {
               "Content-Type" : "application/json",
               'Authentication-Token' : sessionStorage.getItem('token'),
           },
           body: JSON.stringify({
-              status: this.status
+            servicedate: this.serviceDate
           }),
         });
         if(res.ok){
-          router.push("/pdashboard")
+          router.push("/cdashboard")
         }
         else{
           console.log("someerror")
@@ -47,6 +42,6 @@ const PEditServiceRequest = {
     },
 
 }
-// commenting to resolve commit errors
+// commenting to resolve commit errors1
 
-export default PEditServiceRequest;
+export default CEditServiceRequest;

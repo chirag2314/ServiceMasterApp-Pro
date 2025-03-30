@@ -54,7 +54,10 @@ const Login = {
           sessionStorage.setItem('email', data.email);
           sessionStorage.setItem('id', data.id);
           sessionStorage.setItem('name', data.name);
+          sessionStorage.setItem('active',data.active);
           
+          this.$store.commit("setLogin",true);
+          this.$store.commit("setRole",data.role);
           //console.log(sessionStorage.getItem('token'))
 
           switch (data.role){
@@ -75,5 +78,6 @@ const Login = {
     },
   },
 };
+// commenting to resolve commit errors
 
 export default Login;

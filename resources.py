@@ -1,5 +1,6 @@
 from flask_restful import Api, Resource, fields, reqparse, marshal_with
 from flask_security import auth_required
+from extensions import cache
 from models import db, Service, User, ServiceRequest, UserRoles, Role
 
 api=Api(prefix='/api')
@@ -25,6 +26,7 @@ services_fields = {
 
 class ServiceResources(Resource):
     #@auth_required('token')
+    @cache.cached(timeout=60) #seconds
     @marshal_with(services_fields)
     def get(self):
         all_resources=Service.query.all()
@@ -105,6 +107,7 @@ professional_fields = {
 
 class ProfessionalData(Resource):
     @auth_required('token')
+    @cache.cached(timeout=60)
     @marshal_with(professional_fields)
     def get(self):
         all_professionals = User.query.join(UserRoles).join(Role).filter(Role.name == 'professional').all()
@@ -133,6 +136,7 @@ api.add_resource(ProfessionalResourceForApproval, '/aupdateprofessional/<int:id>
 
 class ProfessionalResourceForBooking(Resource):
     @auth_required('token')
+    @cache.cached(timeout=60)
     @marshal_with(professional_fields)
     def get(self, id):
         all_resources=User.query.filter_by(service_id=id, active='Approved').all()
@@ -166,6 +170,7 @@ servicerequest_fields = {
 
 class ServiceRequestData(Resource):
     @auth_required('token')
+    @cache.cached(timeout=60)
     @marshal_with(servicerequest_fields)
     def get(self):
         all_servicerequests = ServiceRequest.query.all()
@@ -174,7 +179,7 @@ class ServiceRequestData(Resource):
 api.add_resource(ServiceRequestData, '/servicerequests')
 
 class ServiceRequestDataForPDashboard(Resource):
-    #@auth_required('token')
+    @auth_required('token')
     @marshal_with(servicerequest_fields)
     def get(self,id):
         all_resources=ServiceRequest.query.filter_by(puser=id).all()
@@ -183,10 +188,12 @@ class ServiceRequestDataForPDashboard(Resource):
 api.add_resource(ServiceRequestDataForPDashboard, '/servicerequestsp/<int:id>')
 
 class ServiceRequestDataForCDashboard(Resource):
-    #@auth_required('token')
+    @auth_required('token')
     @marshal_with(servicerequest_fields)
     def get(self,id):
         all_resources=ServiceRequest.query.filter_by(cuser=id).all()
         return all_resources
     
 api.add_resource(ServiceRequestDataForCDashboard, '/servicerequestsc/<int:id>')
+
+# commenting to resolve commit errors

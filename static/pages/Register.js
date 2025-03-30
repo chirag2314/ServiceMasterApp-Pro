@@ -101,5 +101,6 @@ const Register = {
     },
   },
 };
+// commenting to resolve commit errors
 
 export default Register;
