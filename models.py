@@ -59,6 +59,3 @@ class ServiceRequest(db.Model):
     services=db.relationship('Service', backref='servicerequests', lazy=True)
     professional = db.relationship('User', foreign_keys = [puser])
     customer = db.relationship('User', foreign_keys= [cuser]) 
-
-
-# commenting to resolve commit errors

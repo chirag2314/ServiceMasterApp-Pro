@@ -6,6 +6,7 @@ const AAddService = {
     <h1 class="text-center mb-4">Add Service</h1>
     <div class="card p-4">
       <div @submit.prevent="submitService">
+      
         <!-- Service Name -->
         <div class="form-group mb-3">
           <label for="servicename" class="form-label">Service Name</label>
@@ -68,5 +69,4 @@ const AAddService = {
       }
     }
 }
-// commenting to resolve commit errors
 export default AAddService

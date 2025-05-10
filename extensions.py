@@ -5,5 +5,3 @@ from flask_caching import Cache
 db = SQLAlchemy()
 security = Security()
 cache = Cache()
-
-# commenting to resolve commit errors

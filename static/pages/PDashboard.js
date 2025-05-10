@@ -92,7 +92,5 @@ const PDashboard = {
     }
 }
 
-// commenting to resolve commit errors
-
 
 export default PDashboard;

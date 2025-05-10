@@ -80,6 +80,5 @@ const AUpdateProfessional = {
       }
     },
 }
-// commenting to resolve commit errors
 
 export default AUpdateProfessional

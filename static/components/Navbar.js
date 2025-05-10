@@ -61,6 +61,5 @@ const Navbar = {
         },
     },
 };
-// commenting to resolve commit errors
 
 export default Navbar;

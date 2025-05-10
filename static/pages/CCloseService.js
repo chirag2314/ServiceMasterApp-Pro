@@ -64,6 +64,5 @@ const CCloseService = {
         },
     },
 };
-// commenting to resolve commit errors
 
 export default CCloseService;

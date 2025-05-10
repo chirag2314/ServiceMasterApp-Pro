@@ -25,14 +25,11 @@ services_fields = {
 }
 
 class ServiceResources(Resource):
-    #@auth_required('token')
-    @cache.cached(timeout=60) #seconds
     @marshal_with(services_fields)
     def get(self):
         all_resources=Service.query.all()
         return all_resources
     
-    #@auth_required('token')
     @marshal_with(services_fields)
     def post(self):
         args=parser.parse_args()
@@ -44,13 +41,11 @@ class ServiceResources(Resource):
 api.add_resource(ServiceResources, '/services')
 
 class ServiceResourceForDelete(Resource):
-    #@auth_required('token')
     @marshal_with(services_fields)
     def get(self,id):
         all_resources=Service.query.get(id)
         return all_resources
     
-    #@auth_required('token')
     @marshal_with(services_fields)
     def post(self, id):
         service=Service.query.get(id)
@@ -195,5 +190,3 @@ class ServiceRequestDataForCDashboard(Resource):
         return all_resources
     
 api.add_resource(ServiceRequestDataForCDashboard, '/servicerequestsc/<int:id>')
-
-# commenting to resolve commit errors

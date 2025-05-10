@@ -6,11 +6,6 @@ from models import ServiceRequest, User
 from mail_service import send_email
 from datetime import datetime
 
-@shared_task
-def add(x,y):
-    time.sleep(15)
-    return x+y
-
 @shared_task(ignore_result = False)
 def create_csv():
     srdata = ServiceRequest.query.with_entities(ServiceRequest.cuser, ServiceRequest.servicereqid, ServiceRequest.puser, ServiceRequest.status).all()
@@ -35,13 +30,13 @@ def daily_reminder():
 @shared_task(ignore_result = True)
 def monthly_email():
 
-    customers = User.query.join(User.roles).filter_by(name='customer').all()
-    for customer in customers:
+    professionals = User.query.join(User.roles).filter_by(name='professional').all()
+    for professional in professionals:
         month = datetime.utcnow().replace(day=1)  
-        all_sr = ServiceRequest.query.filter(ServiceRequest.cuser == customer.id,ServiceRequest.requestdate >= month).all()
-        closed_sr = ServiceRequest.query.filter(ServiceRequest.cuser == customer.id,ServiceRequest.completedate >= month,ServiceRequest.status == "Closed").all()
+        all_sr = ServiceRequest.query.filter(ServiceRequest.puser == professional.id,ServiceRequest.requestdate >= month).all()
+        closed_sr = ServiceRequest.query.filter(ServiceRequest.puser == professional.id,ServiceRequest.completedate >= month,ServiceRequest.status == "Closed").all()
         with open('monthly_email.html', 'r') as f:
             template = Template(f.read())
-        report = template.render(name=customer.name,requested_sr=all_sr,closed_sr=closed_sr)
-        send_email(customer.email,"Monthly Report",report)
+        report = template.render(name=professional.name,requested_sr=all_sr,closed_sr=closed_sr)
+        send_email(professional.email,"Monthly Report",report)
     send_email("to", "sub", "message")

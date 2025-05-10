@@ -64,13 +64,10 @@ celery_app=celery_init_app(app)
 @celery_app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
-        20,
-        #crontab(hour=9), #9AM everyday
+        crontab(hour=9), #9AM everyday
         daily_reminder.s()
     )
     sender.add_periodic_task(
-        20,
-        #crontab(day_of_month=1),
+        crontab(day_of_month=1),
         monthly_email.s()
     )
-# commenting to resolve commit errors

@@ -152,6 +152,5 @@ const CDashboard = {
         },
     },
 };
-// commenting to resolve commit errors
 
 export default CDashboard;

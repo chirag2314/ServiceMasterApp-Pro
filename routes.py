@@ -5,7 +5,7 @@ from flask_security import SQLAlchemySessionUserDatastore
 from flask_security.utils import hash_password, verify_password
 from models import ServiceRequest
 from celery.result import AsyncResult
-from tasks import add, create_csv
+from tasks import create_csv
 
 def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, db ,cache):
 
@@ -22,11 +22,6 @@ def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, d
         else:
             return "task not ready", 405
 
-    @app.route('/celerydemo')
-    def celery_demo():
-        task = add.delay(10,20)
-        return jsonify({'task_id' : task.id})
-    
     @app.route('/get-task/<task_id>')
     def get_task(task_id):
         result = AsyncResult(task_id)
@@ -175,5 +170,3 @@ def create_views(app : Flask, user_datastore : SQLAlchemySessionUserDatastore, d
         except:
             db.session.rollback()
             return jsonify({'message' : 'error while editing SR'}), 408
-        
-# commenting to resolve commit errors

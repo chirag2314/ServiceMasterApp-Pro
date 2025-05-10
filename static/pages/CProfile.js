@@ -79,6 +79,5 @@ const CProfile = {
         }
     },
 }
-// commenting to resolve commit errors
 
 export default CProfile;
